@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Stopwatch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .stopwatch {
+      text-align: center;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .time {
+      font-size: 3rem;
+      margin: 20px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+    }
+    button:active {
+      background-color: #45a049;
+    }
+    button.stop {
+      background-color: #f44336;
+    }
+    button.stop:active {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stopwatch">
+    <div class="time" id="display">00:00:00</div>
+    <div class="buttons">
+      <button id="startStopBtn">Start</button>
+      <button id="resetBtn" disabled>Reset</button>
+    </div>
+  </div>
+
+  <script>
+    let timer;
+    let isRunning = false;
+    let seconds = 0;
+    let minutes = 0;
+    let hours = 0;
+
+    const display = document.getElementById('display');
+    const startStopBtn = document.getElementById('startStopBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    // Function to update the stopwatch display
+    function updateDisplay() {
+      const formatTime = (unit) => (unit < 10 ? '0' + unit : unit);
+      display.textContent = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    }
+
+    // Function to start/stop the stopwatch
+    function toggleStartStop() {
+      if (isRunning) {
+        clearInterval(timer);
+        startStopBtn.textContent = 'Start';
+        startStopBtn.classList.remove('stop');
+      } else {
+        timer = setInterval(() => {
+          seconds++;
+          if (seconds === 60) {
+            seconds = 0;
+            minutes++;
+          }
+          if (minutes === 60) {
+            minutes = 0;
+            hours++;
+          }
+          updateDisplay();
+        }, 1000);
+        startStopBtn.textContent = 'Stop';
+        startStopBtn.classList.add('stop');
+      }
+      isRunning = !isRunning;
+      resetBtn.disabled = false;
+    }
+
+    // Function to reset the stopwatch
+    function reset() {
+      clearInterval(timer);
+      isRunning = false;
+      seconds = 0;
+      minutes = 0;
+      hours = 0;
+      updateDisplay();
+      startStopBtn.textContent = 'Start';
+      startStopBtn.classList.remove('stop');
+      resetBtn.disabled = true;
+    }
+
+    // Event listeners for buttons
+    startStopBtn.addEventListener('click', toggleStartStop);
+    resetBtn.addEventListener('click', reset);
+  </script>
+
+</body>
+</html>
